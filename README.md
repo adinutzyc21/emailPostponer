@@ -1,2 +1,2 @@
 # emailPostponer
-Chrome extension to politely tell people who email you to please check back later
+Chrome extension that creates and sends an email to postpone follow-up correspondence until a later date
