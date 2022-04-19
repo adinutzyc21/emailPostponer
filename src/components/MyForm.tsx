@@ -10,61 +10,88 @@ import MyDialog from "./MyDialog";
 
 import { pasteText } from "../utils/browserInteractionModule";
 import { IconTypes } from "../types";
-import { STATE_NAME, WHEN_OPTIONS, CLOSING_MESSAGE, EMAIL_TEMPLATE, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS } from "../utils/constants";
+import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS } from "../utils/constants";
 
 class MyForm extends React.Component<{},
     {
-        recruiterName: string,
-        companyName: string,
+        field1Val: string,
+        field2Val: string,
         contactMeWhen: string,
         closingMessage: string,
         showModal: string,
         emailMessage: string,
         modalFailMsg: string,
+        configData: {
+            EMAIL_TEMPLATE: string,
+            WHEN_OPTIONS: Array<string>,
+            CLOSING_MESSAGE: Array<string>,
+            FIELD1_NAME: string,
+            FIELD2_NAME: string,
+        }
     }> {
     constructor(props: any) {
         super(props);
-
         this.state = {
-            recruiterName: "",
-            companyName: "",
-            contactMeWhen: WHEN_OPTIONS[0],
-            closingMessage: CLOSING_MESSAGE[0],
+            field1Val: "",
+            field2Val: "",
+            contactMeWhen: "",
+            closingMessage: "",
             showModal: MODAL_STATES.none,
             emailMessage: "",
             modalFailMsg: "",
+            configData: {
+                EMAIL_TEMPLATE: "",
+                WHEN_OPTIONS: [],
+                CLOSING_MESSAGE: [],
+                FIELD1_NAME: "",
+                FIELD2_NAME: "",
+            }
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.createEmail = this.createEmail.bind(this);
     }
 
+    componentDidMount() {
+        chrome.tabs && chrome.tabs.query({
+            active: true,
+            currentWindow: true
+        }, tabs => {
+            chrome.tabs.sendMessage(
+                tabs[0].id || 0,
+                { method: REACT_MSG_METHODS.getData, emailToSend: this.state.emailMessage },
+                (configData) => {
+                    if (configData) {
+                        console.log("hello", configData);
+                        this.setState({ configData });
+                        this.setState({ contactMeWhen: configData.WHEN_OPTIONS[0] });
+                        this.setState({ closingMessage: configData.CLOSING_MESSAGE[0] });
+                    }
+                }
+            );
+        });
+    }
+
     async pasteText(stateName: string) {
         const response = await pasteText();
         switch (stateName) {
-            case STATE_NAME.recruiterName:
-                this.setState({ recruiterName: response.text });
+            case STATE_NAME.field1:
+                this.setState({ field1Val: response.text });
                 break;
-            case STATE_NAME.companyName:
-                this.setState({ companyName: response.text });
-                break;
-            case STATE_NAME.closingMessage:
-                this.setState({ closingMessage: response.text });
-                break;
-            case STATE_NAME.contactMeWhen:
-                this.setState({ contactMeWhen: response.text });
+            case STATE_NAME.field2:
+                this.setState({ field2Val: response.text });
                 break;
         }
     }
 
     createEmail(): string {
-        return EMAIL_TEMPLATE.replace("$recruiter$", this.state.recruiterName)
+        return this.state.configData.EMAIL_TEMPLATE.replace("$field1$", this.state.field1Val)
             .replace("$when$", this.state.contactMeWhen)
-            .replace("$atCompany$", this.state.companyName ? `at ${this.state.companyName}` : "")
+            .replace("$field2$", this.state.field2Val ? `at ${this.state.field2Val}` : "")
             .replace("$closing$", this.state.closingMessage);
     }
 
     handleSubmit(event: any) {
-        if (!this.state.recruiterName || !this.state.contactMeWhen || !this.state.closingMessage) {
+        if (!this.state.field1Val || !this.state.contactMeWhen || !this.state.closingMessage) {
             this.setState({ modalFailMsg: "Fields marked with * are required! You can paste them directly from the email if you want." })
             this.setState({ showModal: MODAL_STATES.failure });
             return;
@@ -93,11 +120,11 @@ class MyForm extends React.Component<{},
 
     handleChange(event: any, stateName: string) {
         switch (stateName) {
-            case STATE_NAME.recruiterName:
-                this.setState({ recruiterName: event.target.value });
+            case STATE_NAME.field1:
+                this.setState({ field1Val: event.target.value });
                 break;
-            case STATE_NAME.companyName:
-                this.setState({ companyName: event.target.value });
+            case STATE_NAME.field2:
+                this.setState({ field2Val: event.target.value });
                 break;
             case STATE_NAME.contactMeWhen:
                 this.setState({ contactMeWhen: event.target.value });
@@ -135,10 +162,10 @@ class MyForm extends React.Component<{},
     }
 
     resetForm() {
-        this.setState({ recruiterName: "" });
-        this.setState({ companyName: "" });
-        this.setState({ contactMeWhen: WHEN_OPTIONS[0] });
-        this.setState({ closingMessage: CLOSING_MESSAGE[0] });
+        this.setState({ field1Val: "" });
+        this.setState({ field2Val: "" });
+        this.setState({ contactMeWhen: this.state.configData.WHEN_OPTIONS[0] });
+        this.setState({ closingMessage: this.state.configData.CLOSING_MESSAGE[0] });
         this.setState({ showModal: MODAL_STATES.none });
         this.setState({ emailMessage: "" });
         this.setState({ modalFailMsg: "" });
@@ -151,20 +178,20 @@ class MyForm extends React.Component<{},
                 <MyDialog showModalState={this.state.showModal} handleClose={this.handleDialogClose.bind(this)}
                     generatedEmailMessage={this.state.emailMessage} errorMsg={this.state.modalFailMsg}
                 />
-                <MyFormInput label="Recruiter Name *" icon={IconTypes.recruiterName} helperText="Paste Recruiter Name here"
-                    stateName={STATE_NAME.recruiterName} onClick={this.pasteText.bind(this)} value={this.state.recruiterName}
+                <MyFormInput label={`${this.state.configData.FIELD1_NAME} *`} icon={IconTypes.recruiterName} helperText="Paste Recruiter Name here"
+                    stateName={STATE_NAME.field1} onClick={this.pasteText.bind(this)} value={this.state.field1Val}
                     onChange={this.handleChange.bind(this)}
                 />
-                <MyFormInput label="Company Name" icon={IconTypes.companyName} helperText="Paste Company Name here"
-                    stateName={STATE_NAME.companyName} onClick={this.pasteText.bind(this)} value={this.state.companyName}
+                <MyFormInput label={this.state.configData.FIELD2_NAME} icon={IconTypes.companyName} helperText="Paste Company Name here"
+                    stateName={STATE_NAME.field2} onClick={this.pasteText.bind(this)} value={this.state.field2Val}
                     onChange={this.handleChange.bind(this)}
                 />
                 <MyRBGroup label="When Should You Be Contacted *"
-                    options={WHEN_OPTIONS} onChange={this.handleChange.bind(this)} stateName={STATE_NAME.contactMeWhen}
+                    options={this.state.configData.WHEN_OPTIONS} onChange={this.handleChange.bind(this)} stateName={STATE_NAME.contactMeWhen}
                     value={this.state.contactMeWhen}
                 />
                 <MyRBGroup label="Closing Message *"
-                    options={CLOSING_MESSAGE} onChange={this.handleChange.bind(this)} stateName={STATE_NAME.closingMessage}
+                    options={this.state.configData.CLOSING_MESSAGE} onChange={this.handleChange.bind(this)} stateName={STATE_NAME.closingMessage}
                     value={this.state.closingMessage}
                 />
 

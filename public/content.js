@@ -38,6 +38,9 @@ function messagesFromReactAppListener(msg, sender, sendResponse) {
             }
             break;
         }
+        case "getData":
+            getData(sendResponse);
+            break;
     }
     return true;
 }
@@ -68,6 +71,30 @@ function confirmEmail(message, sendResponse) {
  * Fired when a message is sent from either an extension process or a content script.
  */
 chrome.runtime.onMessage.addListener(messagesFromReactAppListener);
+
+// Generic error handling method
+function handleErrors(response) {
+    if (!response.ok) {
+        throw Error(`${response.status}: ${response.statusText}`);
+    }
+    return response.json();
+}
+
+function getData(sendResponse) {
+    const options = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    };
+
+    const sendResp = sendResponse;
+
+    fetch(chrome.runtime.getURL('config.json'), options)
+        .then(handleErrors)
+        .then((response) => sendResp(response))
+        .catch((e) => sendResp({ Error: e.message }));
+}
 
 /**
  * Create side panel

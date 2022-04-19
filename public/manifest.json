@@ -15,7 +15,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["index.html" ],
+      "resources": ["index.html", "config.json"],
       "matches": ["<all_urls>"],
       "extension_ids": ["hppfkcgmfaachkedbhnonfbceicemgop"]
     }
