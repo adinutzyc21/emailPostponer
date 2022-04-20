@@ -1,3 +1,3 @@
 export enum IconTypes {
-    recruiterName, companyName
+    field1Icon, field2Icon
 };

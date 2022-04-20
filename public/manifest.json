@@ -15,9 +15,14 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["index.html", "config.json"],
+      "resources": ["index.html"],
       "matches": ["<all_urls>"],
-      "extension_ids": ["hppfkcgmfaachkedbhnonfbceicemgop"]
+      "extension_ids": ["kgkhlehlgioacjbebnpfcdnehjmigdim"]
+    },
+    {
+      "resources": ["config.json"],
+      "matches": ["<all_urls>"],
+      "extension_ids": ["kgkhlehlgioacjbebnpfcdnehjmigdim"]
     }
   ],
   "permissions": ["activeTab", "scripting"],

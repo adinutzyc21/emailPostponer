@@ -11,6 +11,7 @@ import MyDialog from "./MyDialog";
 import { pasteText } from "../utils/browserInteractionModule";
 import { IconTypes } from "../types";
 import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS } from "../utils/constants";
+import MySelect from "./MySelect";
 
 class MyForm extends React.Component<{},
     {
@@ -49,9 +50,14 @@ class MyForm extends React.Component<{},
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.createEmail = this.createEmail.bind(this);
+        this.getData = this.getData.bind(this);
     }
 
     componentDidMount() {
+        this.getData();
+    }
+
+    getData() {
         chrome.tabs && chrome.tabs.query({
             active: true,
             currentWindow: true
@@ -174,26 +180,40 @@ class MyForm extends React.Component<{},
     render() {
         return (
             <Stack spacing={2}>
-                <ButtonAppBar />
+                <ButtonAppBar refreshData={this.getData} />
                 <MyDialog showModalState={this.state.showModal} handleClose={this.handleDialogClose.bind(this)}
                     generatedEmailMessage={this.state.emailMessage} errorMsg={this.state.modalFailMsg}
                 />
-                <MyFormInput label={`${this.state.configData.FIELD1_NAME} *`} icon={IconTypes.recruiterName} helperText="Paste Recruiter Name here"
+                <MyFormInput label={`${this.state.configData.FIELD1_NAME} *`} icon={IconTypes.field1Icon} helperText={`Paste ${this.state.configData.FIELD1_NAME} here`}
                     stateName={STATE_NAME.field1} onClick={this.pasteText.bind(this)} value={this.state.field1Val}
                     onChange={this.handleChange.bind(this)}
                 />
-                <MyFormInput label={this.state.configData.FIELD2_NAME} icon={IconTypes.companyName} helperText="Paste Company Name here"
-                    stateName={STATE_NAME.field2} onClick={this.pasteText.bind(this)} value={this.state.field2Val}
-                    onChange={this.handleChange.bind(this)}
-                />
-                <MyRBGroup label="When Should You Be Contacted *"
-                    options={this.state.configData.WHEN_OPTIONS} onChange={this.handleChange.bind(this)} stateName={STATE_NAME.contactMeWhen}
-                    value={this.state.contactMeWhen}
-                />
-                <MyRBGroup label="Closing Message *"
-                    options={this.state.configData.CLOSING_MESSAGE} onChange={this.handleChange.bind(this)} stateName={STATE_NAME.closingMessage}
-                    value={this.state.closingMessage}
-                />
+                {this.state.configData.FIELD2_NAME &&
+                    <MyFormInput label={this.state.configData.FIELD2_NAME} icon={IconTypes.field2Icon} helperText={`Paste ${this.state.configData.FIELD2_NAME} here`}
+                        stateName={STATE_NAME.field2} onClick={this.pasteText.bind(this)} value={this.state.field2Val}
+                        onChange={this.handleChange.bind(this)}
+                    />
+                }
+                {this.state.configData.WHEN_OPTIONS.length < 5 ?
+                    <MyRBGroup label="When Should You Be Contacted *"
+                        options={this.state.configData.WHEN_OPTIONS} onChange={this.handleChange.bind(this)} stateName={STATE_NAME.contactMeWhen}
+                        value={this.state.contactMeWhen}
+                    /> :
+                    <MySelect label="When Should You Be Contacted *"
+                        options={this.state.configData.WHEN_OPTIONS} onChange={this.handleChange.bind(this)} stateName={STATE_NAME.contactMeWhen}
+                        value={this.state.contactMeWhen}
+                    />
+                }
+                {this.state.configData.CLOSING_MESSAGE.length < 5 ?
+                    <MyRBGroup label="Closing Message *"
+                        options={this.state.configData.CLOSING_MESSAGE} onChange={this.handleChange.bind(this)} stateName={STATE_NAME.closingMessage}
+                        value={this.state.closingMessage}
+                    /> :
+                    <MySelect label="Closing Message *"
+                        options={this.state.configData.CLOSING_MESSAGE} onChange={this.handleChange.bind(this)} stateName={STATE_NAME.closingMessage}
+                        value={this.state.closingMessage}
+                    />
+                }
 
                 <Button variant="contained" color="success" endIcon={<SendIcon />} onClick={this.handleSubmit}
                     sx={{ padding: "2px 4px", display: "flex", alignItems: "center" }}>

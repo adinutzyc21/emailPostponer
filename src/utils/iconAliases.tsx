@@ -4,9 +4,9 @@ import { IconTypes } from '../types';
 
 export function getIcon(iconName: IconTypes) {
     switch (iconName) {
-        case IconTypes.recruiterName:
+        case IconTypes.field1Icon:
             return <PersonAddIcon />;
-        case IconTypes.companyName:
+        case IconTypes.field2Icon:
             return <BusinessIcon />;
         default:
             return <PersonAddIcon />;
