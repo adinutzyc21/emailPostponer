@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
-import "./MyForm.css";
 import { Button, Stack } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
 import MyFormInput from "./MyFormInput";
-import MyRBGroup from "./MyRBGroup";
+import SelectOrRbComp from "./SelectOrRbComp";
 import MyDialog from "./MyDialog";
 
 import { pasteText as pasteTextOrig } from "../utils/browserInteractionModule";
 import { ConfigDataRespType, IconTypes } from "../types";
 import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS, MONTHS, AROUND_OPTIONS } from "../utils/constants";
-import MySelect from "./MySelect";
 import ContactMeWhenComp from "./ContactMeWhenComp";
 
 export default function MyForm({ configData }: { configData: ConfigDataRespType }) {
@@ -137,17 +135,17 @@ export default function MyForm({ configData }: { configData: ConfigDataRespType 
             <MyDialog showModalState={showModal} handleClose={handleDialogClose}
                 generatedEmailMessage={emailMessage} errorMsg={modalFailMsg}
             />
-            <MyFormInput label={`${configData.FIELD1_NAME} *`} icon={IconTypes.field1Icon} helperText={`Paste ${configData.FIELD1_NAME} here`}
+            <MyFormInput label={configData.FIELD1_NAME} icon={IconTypes.field1Icon} required={true} helperText={`Paste ${configData.FIELD1_NAME} here`}
                 stateName={STATE_NAME.field1} onClick={pasteText} value={field1Val}
                 onChange={handleChange}
             />
             {configData.FIELD2_NAME &&
-                <MyFormInput label={configData.FIELD2_NAME} icon={IconTypes.field2Icon} helperText={`Paste ${configData.FIELD2_NAME} here`}
+                <MyFormInput label={configData.FIELD2_NAME} icon={IconTypes.field2Icon} required={false} helperText={`Paste ${configData.FIELD2_NAME} here`}
                     stateName={STATE_NAME.field2} onClick={pasteText} value={field2Val}
                     onChange={handleChange}
                 />
             }
-            <ContactMeWhenComp label="When Should You Be Contacted *"
+            <ContactMeWhenComp label="When Should You Be Contacted"
                 optionsRb={AROUND_OPTIONS}
                 optionsSel={MONTHS}
                 onChangeRb={handleChange}
@@ -156,18 +154,13 @@ export default function MyForm({ configData }: { configData: ConfigDataRespType 
                 stateNameSel={STATE_NAME.contactMeMonth}
                 valueRb={contactMeAround}
                 valueSel={contactMeMonth}
+                required={true}
             />
-            {configData.CLOSING_MESSAGE.length < 5 ?
-                <MyRBGroup label="Closing Message *"
-                    options={configData.CLOSING_MESSAGE} onChange={handleChange} stateName={STATE_NAME.closingMessage}
-                    value={closingMessage}
-                /> :
-                <MySelect label="Closing Message *"
-                    options={configData.CLOSING_MESSAGE} onChange={handleChange} stateName={STATE_NAME.closingMessage}
-                    value={closingMessage}
-                />
-            }
-
+            <SelectOrRbComp label="Closing Message"
+                options={configData.CLOSING_MESSAGE} onChange={handleChange} stateName={STATE_NAME.closingMessage}
+                value={closingMessage}
+                required={true}
+            />
             <Button variant="contained" color="success" endIcon={<SendIcon />} onClick={handleSubmit}
                 sx={{ padding: "2px 4px", display: "flex", alignItems: "center" }}>
                 Generate Email

@@ -36,7 +36,7 @@ function a11yProps(index: number) {
     };
 }
 
-const tabNames = ["Generate Response", "Add Notes"];
+const tabNames = ["Generate Response", "Notes"];
 
 export default function TabBook({ configData }: { configData: ConfigDataRespType }) {
     const [value, setValue] = React.useState(0);

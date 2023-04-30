@@ -1,4 +1,3 @@
-import './MyForm.css';
 import { IconTypes } from '../types';
 import { getIcon } from '../utils/iconAliases';
 import { FormControl, FormHelperText, Paper, Input, InputLabel, IconButton, InputAdornment } from '@mui/material';
@@ -12,14 +11,15 @@ export default function MyFormInput(props:
         helperText: string,
         stateName: string,
         onClick: (stateName: string) => void,
-        onChange: (event: any, stateName: string) => void
+        onChange: (event: any, stateName: string) => void,
+        required: boolean
     }) {
     return (
         <Paper
             component="form"
             sx={{ padding: '2px 4px', display: 'flex', alignItems: 'left', margin: "20px 5px 200px" }}
         >
-            <FormControl variant="standard" sx={{ ml: 1, flex: 1 }} aria-label='paste text here'>
+            <FormControl variant="standard" required={props.required} sx={{ ml: 1, flex: 1 }} aria-label='paste text here'>
                 <InputLabel htmlFor="component-helper">{props.label}</InputLabel>
                 <Input
                     id="component-helper" value={props.value}
