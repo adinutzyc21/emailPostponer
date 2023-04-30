@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Tabs, Tab, Typography, Box } from '@mui/material';
-import MyForm from './MyForm';
+import EmailForm from './EmailForm';
 import { ConfigDataRespType } from '../types';
 
 interface TabPanelProps {
@@ -55,7 +55,7 @@ export default function TabBook({ configData }: { configData: ConfigDataRespType
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-                <MyForm configData={configData} />
+                <EmailForm configData={configData} />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 {tabNames[1]}

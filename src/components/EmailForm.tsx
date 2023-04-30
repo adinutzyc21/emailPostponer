@@ -11,7 +11,7 @@ import { ConfigDataRespType, IconTypes } from "../types";
 import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS, MONTHS, AROUND_OPTIONS } from "../utils/constants";
 import ContactMeWhenComp from "./ContactMeWhenComp";
 
-export default function MyForm({ configData }: { configData: ConfigDataRespType }) {
+export default function EmailForm({ configData }: { configData: ConfigDataRespType }) {
     const [field1Val, setField1Val] = useState<string>("");
     const [field2Val, setField2Val] = useState<string>("");
     const [showModal, setShowModal] = useState<string>(MODAL_STATES.none);
