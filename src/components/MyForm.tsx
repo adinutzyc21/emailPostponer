@@ -3,7 +3,6 @@ import "./MyForm.css";
 import { Button, Stack } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
-import { ButtonAppBar } from "./ButtonAppBar";
 import MyFormInput from "./MyFormInput";
 import MyRBGroup from "./MyRBGroup";
 import MyDialog from "./MyDialog";
@@ -180,7 +179,6 @@ class MyForm extends React.Component<{},
     render() {
         return (
             <Stack spacing={2}>
-                <ButtonAppBar refreshData={this.getData} />
                 <MyDialog showModalState={this.state.showModal} handleClose={this.handleDialogClose.bind(this)}
                     generatedEmailMessage={this.state.emailMessage} errorMsg={this.state.modalFailMsg}
                 />
