@@ -1,8 +1,8 @@
 import { Typography, Toolbar, AppBar, Avatar, Box, IconButton } from "@mui/material";
-// import CachedIcon from '@mui/icons-material/Cached';
+import CachedIcon from '@mui/icons-material/Cached';
 import logo from "../img/logo.png";
 
-export default function ButtonAppBar(/*props: { reloadConfig: () => void }*/) {
+export default function ButtonAppBar(props: { reloadConfig: () => void }) {
     return (
         <Box sx={{ flexGrow: 1, margin_bottom: 200 }}>
             <AppBar position="static">
@@ -18,9 +18,9 @@ export default function ButtonAppBar(/*props: { reloadConfig: () => void }*/) {
                     }}>
                         Email-Postponement Extension for Gmail
                     </Typography>
-                    {/* <IconButton aria-label="refresh" onClick={() => props.reloadConfig()}>
+                    <IconButton aria-label="refresh" onClick={() => props.reloadConfig()}>
                         <CachedIcon />
-                    </IconButton> */}
+                    </IconButton>
 
                 </Toolbar>
             </AppBar>

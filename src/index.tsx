@@ -1,14 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import ButtonAppBar from './components/ButtonAppBar';
-import TabBook from './components/TabBook';
-
+import MainApp from './components/MainApp';
 
 ReactDOM.render(
     <React.StrictMode>
-        <ButtonAppBar />
-        <TabBook />
+        <MainApp />
     </React.StrictMode>,
     document.getElementById('root')
 );

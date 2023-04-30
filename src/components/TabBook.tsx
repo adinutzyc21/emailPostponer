@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Tabs, Tab, Typography, Box, Paper } from '@mui/material';
+import { Tabs, Tab, Typography, Box } from '@mui/material';
 import MyForm from './MyForm';
+import { ConfigDataRespType } from '../types';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -37,23 +38,24 @@ function a11yProps(index: number) {
 
 const tabNames = ["Generate Response", "Add Notes"];
 
-export default function TabBook() {
+export default function TabBook({ configData }: { configData: ConfigDataRespType }) {
     const [value, setValue] = React.useState(0);
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleChange = (e: React.SyntheticEvent, newValue: number) => {
+        e.preventDefault();
         setValue(newValue);
     };
 
     return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tabs value={value} onChange={handleChange} aria-label="Tab Book">
                     <Tab label={tabNames[0]} {...a11yProps(0)} />
                     <Tab label={tabNames[1]} {...a11yProps(1)} />
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-                <MyForm />
+                <MyForm configData={configData} />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 {tabNames[1]}
