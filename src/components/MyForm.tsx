@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./MyForm.css";
 import { Button, Stack } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
@@ -9,8 +9,9 @@ import MyDialog from "./MyDialog";
 
 import { pasteText as pasteTextOrig } from "../utils/browserInteractionModule";
 import { ConfigDataRespType, IconTypes } from "../types";
-import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS } from "../utils/constants";
+import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS, MONTHS, AROUND_OPTIONS } from "../utils/constants";
 import MySelect from "./MySelect";
+import ContactMeWhenComp from "./ContactMeWhenComp";
 
 export default function MyForm({ configData }: { configData: ConfigDataRespType }) {
     const [field1Val, setField1Val] = useState<string>("");
@@ -18,11 +19,12 @@ export default function MyForm({ configData }: { configData: ConfigDataRespType 
     const [showModal, setShowModal] = useState<string>(MODAL_STATES.none);
     const [emailMessage, setEmailMessage] = useState<string>("");
     const [modalFailMsg, setModalFailMsg] = useState<string>("");
-    const [contactMeWhen, setContactMeWhen] = useState<string>("");
+    const [contactMeAround, setContactMeAround] = useState<string>("");
+    const [contactMeMonth, setContactMeMonth] = useState<string>(MONTHS[new Date().getMonth()]);
     const [closingMessage, setClosingMessage] = useState<string>("");
 
     useEffect(() => {
-        setContactMeWhen(configData.WHEN_OPTIONS[0]);
+        setContactMeAround(AROUND_OPTIONS[0]);
         setClosingMessage(configData.CLOSING_MESSAGE[0]);
     }, [configData]);
 
@@ -40,15 +42,16 @@ export default function MyForm({ configData }: { configData: ConfigDataRespType 
 
     const createEmail = (): string => {
         return configData.EMAIL_TEMPLATE.replace("$field1$", field1Val)
-            .replace("$when$", contactMeWhen)
-            .replace("$field2$", field2Val ? `at ${field2Val}` : "")
+            .replace("$around$", contactMeAround)
+            .replace("$month$", contactMeMonth)
+            .replace("$field2$", field2Val)
             .replace("$closing$", closingMessage);
     }
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
 
-        if (!field1Val || !contactMeWhen || !closingMessage) {
+        if (!field1Val || !contactMeAround || !closingMessage) {
             setModalFailMsg("Fields marked with * are required! You can paste them directly from the email if you want.");
             setShowModal(MODAL_STATES.failure);
             return;
@@ -81,8 +84,11 @@ export default function MyForm({ configData }: { configData: ConfigDataRespType 
             case STATE_NAME.field2:
                 setField2Val(event.target.value);
                 break;
-            case STATE_NAME.contactMeWhen:
-                setContactMeWhen(event.target.value);
+            case STATE_NAME.contactMeAround:
+                setContactMeAround(event.target.value);
+                break;
+            case STATE_NAME.contactMeMonth:
+                setContactMeMonth(event.target.value);
                 break;
             case STATE_NAME.closingMessage:
                 setClosingMessage(event.target.value);
@@ -119,7 +125,7 @@ export default function MyForm({ configData }: { configData: ConfigDataRespType 
     const resetForm = () => {
         setField1Val("");
         setField2Val("");
-        setContactMeWhen(configData.WHEN_OPTIONS[0]);
+        setContactMeAround(AROUND_OPTIONS[0]);
         setClosingMessage(configData.CLOSING_MESSAGE[0]);
         setShowModal(MODAL_STATES.none);
         setEmailMessage("");
@@ -141,16 +147,16 @@ export default function MyForm({ configData }: { configData: ConfigDataRespType 
                     onChange={handleChange}
                 />
             }
-            {configData.WHEN_OPTIONS.length < 5 ?
-                <MyRBGroup label="When Should You Be Contacted *"
-                    options={configData.WHEN_OPTIONS} onChange={handleChange} stateName={STATE_NAME.contactMeWhen}
-                    value={contactMeWhen}
-                /> :
-                <MySelect label="When Should You Be Contacted *"
-                    options={configData.WHEN_OPTIONS} onChange={handleChange} stateName={STATE_NAME.contactMeWhen}
-                    value={contactMeWhen}
-                />
-            }
+            <ContactMeWhenComp label="When Should You Be Contacted *"
+                optionsRb={AROUND_OPTIONS}
+                optionsSel={MONTHS}
+                onChangeRb={handleChange}
+                onChangeSel={handleChange}
+                stateNameRb={STATE_NAME.contactMeAround}
+                stateNameSel={STATE_NAME.contactMeMonth}
+                valueRb={contactMeAround}
+                valueSel={contactMeMonth}
+            />
             {configData.CLOSING_MESSAGE.length < 5 ?
                 <MyRBGroup label="Closing Message *"
                     options={configData.CLOSING_MESSAGE} onChange={handleChange} stateName={STATE_NAME.closingMessage}

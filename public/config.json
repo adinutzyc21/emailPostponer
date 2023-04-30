@@ -1,7 +1,6 @@
 {
-    "WHEN_OPTIONS": ["the beginning of May", "the end of April", "mid-May"],
     "CLOSING_MESSAGE": ["have a great day", "have a great evening", "have a great weekend", "have a great week"],
     "FIELD1_NAME": "Sender Name",
     "FIELD2_NAME": "Company Name",
-    "EMAIL_TEMPLATE": "Hi $field1$,<br/><br/>Thank you so much for reaching out! I am actually currently out of the country until $when$, but I would be excited to talk to you about $field2$ closer to that time, if that works for you.<br/>Feel free to reach out closer to that time!<br/><br/>Thank you again, and $closing$!<br/>"
+    "EMAIL_TEMPLATE": "Hi $field1$,<br/><br/>Thank you so much for reaching out! I am actually currently out of the country until $around$$month$, but I would be excited to talk to you about $field2$ closer to that time, if that works for you.<br/><br/>Thank you again, and $closing$!<br/>"
 }

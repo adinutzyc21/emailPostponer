@@ -9,7 +9,6 @@ import { ConfigDataRespType } from '../types';
 export default function MainApp() {
     const [configData, setConfigData] = useState<ConfigDataRespType>({
         EMAIL_TEMPLATE: "",
-        WHEN_OPTIONS: [],
         CLOSING_MESSAGE: [],
         FIELD1_NAME: "",
         FIELD2_NAME: "",
