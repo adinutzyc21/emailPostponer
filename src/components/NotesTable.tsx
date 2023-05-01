@@ -2,6 +2,9 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { NotesType } from '../types';
 
 export default function NotesTable({ notes }: { notes: NotesType[] }) {
+    if(!notes || notes.length===0){
+        return null;
+    }
     return (
         <TableContainer component={Paper} sx={{ maxHeight: 230 }}>
             <Table stickyHeader aria-label="notes table">
