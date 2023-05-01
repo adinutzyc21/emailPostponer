@@ -54,6 +54,15 @@ export default function TabBook({ configData, url }: { configData: ConfigDataRes
         // eslint-disable-next-line react-hooks/exhaustive-deps 
     }, [url]);
 
+    React.useEffect(() => {
+        if(notes && notes.length){
+            setTabValue(1);
+        } else {
+            setTabValue(0);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
+    }, [notes]);
+
     const getNotesList = async () => {
         try {
             const notesResponse = await sendRequest({
@@ -62,13 +71,6 @@ export default function TabBook({ configData, url }: { configData: ConfigDataRes
             });
 
             const notes = notesResponse.response;
-
-            if (notes && notes.length > 0) {
-                // switch to second tab
-                setTabValue(1);
-            } else {
-                setTabValue(0);
-            }
             setNotes(notes);
 
         } catch (e) {
@@ -85,7 +87,7 @@ export default function TabBook({ configData, url }: { configData: ConfigDataRes
                 </Tabs>
             </Box>
             <TabPanel value={tabValue} index={0}>
-                <EmailForm configData={configData} url={url} />
+                <EmailForm configData={configData} url={url} notes={notes} setNotes={setNotes} />
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
                 <NotesForm url={url} notes={notes} setNotes={setNotes} />

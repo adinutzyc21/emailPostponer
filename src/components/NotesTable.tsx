@@ -6,7 +6,7 @@ export default function NotesTable({ notes }: { notes: NotesType[] }) {
         return null;
     }
     return (
-        <TableContainer component={Paper} sx={{ maxHeight: 230 }}>
+        <TableContainer component={Paper} sx={{ maxHeight: "400px" }}>
             <Table stickyHeader aria-label="notes table">
                 <TableHead>
                     <TableRow>

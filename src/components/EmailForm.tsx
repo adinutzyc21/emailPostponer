@@ -7,12 +7,12 @@ import SelectOrRbComp from "./SelectOrRbComp";
 import MyDialog from "./MyDialog";
 
 import { getSelectedText } from "../utils/browserInteractionModule";
-import { ConfigDataRespType } from "../types";
+import { ConfigDataRespType, NotesType } from "../types";
 import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS, MONTHS, AROUND_OPTIONS } from "../utils/constants";
 import ContactMeWhenComp from "./ContactMeWhenComp";
 import { sendRequest } from "../utils/serviceCallersModule";
 
-export default function EmailForm({ configData, url }: { configData: ConfigDataRespType, url: string }) {
+export default function EmailForm({ configData, url, notes, setNotes }: { configData: ConfigDataRespType, url: string,notes: NotesType[], setNotes: (notes: NotesType[]) => void }) {
     const [field1Val, setField1Val] = useState<string>("");
     const [field2Val, setField2Val] = useState<string>("");
     const [showModal, setShowModal] = useState<string>(MODAL_STATES.none);
@@ -109,10 +109,12 @@ export default function EmailForm({ configData, url }: { configData: ConfigDataR
                             setShowModal(MODAL_STATES.none);
                             resetForm();
                             try {
-                                await sendRequest({
+                                const newNoteResponse = await sendRequest({
                                     method: "submitNote",
                                     requestData: { url, "content": `<b>Email Sent on ${(new Date()).toLocaleDateString()} at ${(new Date()).toLocaleTimeString()}:</b><br/><blockquote>${emailMessage}<blockquote>` },
                                 });
+                                setNotes([newNoteResponse.response, ...notes]);
+
                             } catch (e) {
                                 console.error("An error occurred when submitting email note", e);
                             }
