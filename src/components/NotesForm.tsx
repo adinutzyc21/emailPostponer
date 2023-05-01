@@ -3,7 +3,6 @@ import { Button, Stack, TextField } from "@mui/material";
 
 import MyFormInput from "./MyFormInput";
 
-import { getEmailURLInfo } from "../utils/browserInteractionModule";
 import { STATE_NAME } from "../utils/constants";
 import { ContentPaste, Add } from "@mui/icons-material";
 import { sendRequest } from "../utils/serviceCallersModule"
@@ -17,11 +16,6 @@ export default function NotesForm(props: { url: string, notes: NotesType[], setN
     useEffect(() => {
         setUrl(props.url);
     }, [props.url]);
-
-    const pasteURL = async () => {
-        const response = await getEmailURLInfo();
-        setUrl(response);
-    }
 
     const handleSubmitNote = async (event: any) => {
         event.preventDefault();
@@ -45,7 +39,7 @@ export default function NotesForm(props: { url: string, notes: NotesType[], setN
         <Stack spacing={2}>
             <MyFormInput label={"URL"} required={true} helperText={"URL of the email"}
                 stateName={STATE_NAME.url} value={url} onChange={(event: SyntheticEvent) => setUrl((event.target as HTMLInputElement).value)}
-                endIconBtn={<ContentPaste />} onClick={pasteURL}
+                disabled={true}
             />
 
             <div>

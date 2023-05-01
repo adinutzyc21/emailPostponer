@@ -6,7 +6,7 @@ import MyFormInput from "./MyFormInput";
 import SelectOrRbComp from "./SelectOrRbComp";
 import MyDialog from "./MyDialog";
 
-import { getEmailURLInfo, getSelectedText } from "../utils/browserInteractionModule";
+import { getSelectedText } from "../utils/browserInteractionModule";
 import { ConfigDataRespType } from "../types";
 import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS, MONTHS, AROUND_OPTIONS } from "../utils/constants";
 import ContactMeWhenComp from "./ContactMeWhenComp";
@@ -149,7 +149,7 @@ export default function EmailForm({ configData, url }: { configData: ConfigDataR
                 onChange={handleChange}
             />
             {configData.FIELD2_NAME &&
-                <MyFormInput label={configData.FIELD2_NAME} startIcon={<Business />} required={false} helperText={`Paste ${configData.FIELD2_NAME} here`}
+                <MyFormInput label={configData.FIELD2_NAME} startIcon={<Business />} helperText={`Paste ${configData.FIELD2_NAME} here`}
                     stateName={STATE_NAME.field2} endIconBtn={<ContentPaste />} onClick={pasteSelectedText} value={field2Val}
                     onChange={handleChange}
                 />
