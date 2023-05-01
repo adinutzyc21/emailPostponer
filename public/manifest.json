@@ -16,13 +16,11 @@
   "web_accessible_resources": [
     {
       "resources": ["index.html"],
-      "matches": ["<all_urls>"],
-      "extension_ids": ["odbblhfgggekjincghmjapnccelilkma"]
+      "matches": ["<all_urls>"]
     },
     {
       "resources": ["config.json"],
-      "matches": ["<all_urls>"],
-      "extension_ids": ["odbblhfgggekjincghmjapnccelilkma"]
+      "matches": ["<all_urls>"]
     }
   ],
   "permissions": ["activeTab", "scripting", "tabs"],
