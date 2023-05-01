@@ -6,7 +6,7 @@ import MyFormInput from "./MyFormInput";
 import SelectOrRbComp from "./SelectOrRbComp";
 import MyDialog from "./MyDialog";
 
-import { getSelectedText } from "../utils/browserInteractionModule";
+import { getEmailURLInfo, getSelectedText } from "../utils/browserInteractionModule";
 import { ConfigDataRespType } from "../types";
 import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS, MONTHS, AROUND_OPTIONS } from "../utils/constants";
 import ContactMeWhenComp from "./ContactMeWhenComp";
@@ -20,11 +20,17 @@ export default function EmailForm({ configData }: { configData: ConfigDataRespTy
     const [contactMeAround, setContactMeAround] = useState<string>("");
     const [contactMeMonth, setContactMeMonth] = useState<string>(MONTHS[new Date().getMonth()]);
     const [closingMessage, setClosingMessage] = useState<string>("");
+    const [url, setUrl] = useState<string>("");
 
     useEffect(() => {
         setContactMeAround(AROUND_OPTIONS[0]);
         setClosingMessage(configData.CLOSING_MESSAGE[0]);
     }, [configData]);
+
+    const pasteURL = async () => {
+        const response = await getEmailURLInfo();
+        setUrl(response);
+    }
 
     const pasteSelectedText = async (stateName: string) => {
         const response = await getSelectedText();
