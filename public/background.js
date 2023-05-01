@@ -50,15 +50,22 @@ function fetchReq(method, reqData, sendResponse) {
         },
         body: JSON.stringify(reqData),
     };
-    console.log(options);
 
     const sendResp = sendResponse;
 
     fetch("http://127.0.0.1:5000/notes", options)
         .then(handleErrors)
-        .then((response) => {
-            console.log(response);
-            return sendResp(response);
-        })
+        .then((response) => sendResp(response))
         .catch((e) => sendResp({ Error: e.message }));
 }
+
+// Listen for changing URLs by navigating inside GMail. Data gets sent to React app
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.url) {
+        chrome.tabs.sendMessage(tabId, {
+            message: "urlChanged",
+            url: changeInfo.url,
+        });
+    }
+    return true;
+});

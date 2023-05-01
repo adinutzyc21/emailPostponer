@@ -7,6 +7,8 @@ import { REACT_MSG_METHODS } from '../utils/constants';
 import { ConfigDataRespType } from '../types';
 
 export default function MainApp() {
+    const [url, setUrl] = useState<string>("");
+
     const [configData, setConfigData] = useState<ConfigDataRespType>({
         EMAIL_TEMPLATE: "",
         CLOSING_MESSAGE: [],
@@ -28,13 +30,19 @@ export default function MainApp() {
                 { method: REACT_MSG_METHODS.getData },
                 (configData) => {
                     if (configData) {
-                        console.log("Loading data", configData);
                         setConfigData(configData);
                     }
                 }
             );
         });
     }
+
+    chrome.runtime.onMessage.addListener(function (request) {
+        if (request && request.message === "urlChanged") {
+            setUrl(request.url);
+        }
+        return true;
+    });
 
     return (
         <Box>

@@ -25,7 +25,7 @@
       "extension_ids": ["kgkhlehlgioacjbebnpfcdnehjmigdim"]
     }
   ],
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting", "tabs"],
   "host_permissions": ["https://mail.google.com/mail/*"],
   "icons": {
     "16": "logo16.png",
