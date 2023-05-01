@@ -1,13 +1,11 @@
-import { IconTypes } from '../types';
-import { getIcon } from '../utils/iconAliases';
 import { FormControl, FormHelperText, Paper, Input, InputLabel, IconButton, InputAdornment } from '@mui/material';
-import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 
 export default function MyFormInput(props:
     {
         label: string,
         value: string,
-        icon: IconTypes,
+        startIcon?: JSX.Element,
+        endIconBtn: JSX.Element,
         helperText: string,
         stateName: string,
         onClick: (stateName: string) => void,
@@ -26,18 +24,22 @@ export default function MyFormInput(props:
                     onChange={(event) => props.onChange(event, props.stateName)}
                     aria-describedby="component-helper-text"
                     startAdornment={
-                        <InputAdornment position="start">
-                            {getIcon(props.icon)}
-                        </InputAdornment>
+                        props.startIcon && (
+                            <InputAdornment position="start">
+                                {props.startIcon}
+                            </InputAdornment>
+                        )
                     }
                 />
                 <FormHelperText id="component-helper-text">
                     {props.helperText}
                 </FormHelperText>
             </FormControl>
-            <IconButton color="primary" sx={{ p: '10px' }} aria-label="paste" onClick={() => props.onClick(props.stateName)}>
-                <ContentPasteIcon />
-            </IconButton>
+            {props.endIconBtn && (
+                <IconButton color="primary" sx={{ p: '10px' }} aria-label="paste" onClick={() => props.onClick(props.stateName)}>
+                    {props.endIconBtn}
+                </IconButton>
+            )}
         </Paper >
     );
 }

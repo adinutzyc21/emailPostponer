@@ -1,4 +1,4 @@
-export interface PasteTextRespType {
+export interface SelectedTextRespType {
     text: string;
 }
 

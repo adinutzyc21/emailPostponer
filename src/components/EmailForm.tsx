@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Button, Stack } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
+import { PersonAdd, Business, Send, ContentPaste } from '@mui/icons-material';
 
 import MyFormInput from "./MyFormInput";
 import SelectOrRbComp from "./SelectOrRbComp";
 import MyDialog from "./MyDialog";
 
-import { pasteText as pasteTextOrig } from "../utils/browserInteractionModule";
-import { ConfigDataRespType, IconTypes } from "../types";
+import { getSelectedText } from "../utils/browserInteractionModule";
+import { ConfigDataRespType } from "../types";
 import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS, MONTHS, AROUND_OPTIONS } from "../utils/constants";
 import ContactMeWhenComp from "./ContactMeWhenComp";
 
@@ -26,8 +26,8 @@ export default function EmailForm({ configData }: { configData: ConfigDataRespTy
         setClosingMessage(configData.CLOSING_MESSAGE[0]);
     }, [configData]);
 
-    const pasteText = async (stateName: string) => {
-        const response = await pasteTextOrig();
+    const pasteSelectedText = async (stateName: string) => {
+        const response = await getSelectedText();
         switch (stateName) {
             case STATE_NAME.field1:
                 setField1Val(response.text);
@@ -135,13 +135,13 @@ export default function EmailForm({ configData }: { configData: ConfigDataRespTy
             <MyDialog showModalState={showModal} handleClose={handleDialogClose}
                 generatedEmailMessage={emailMessage} errorMsg={modalFailMsg}
             />
-            <MyFormInput label={configData.FIELD1_NAME} icon={IconTypes.field1Icon} required={true} helperText={`Paste ${configData.FIELD1_NAME} here`}
-                stateName={STATE_NAME.field1} onClick={pasteText} value={field1Val}
+            <MyFormInput label={configData.FIELD1_NAME} startIcon={<PersonAdd />} required={true} helperText={`Paste ${configData.FIELD1_NAME} here`}
+                stateName={STATE_NAME.field1} endIconBtn={<ContentPaste />} onClick={pasteSelectedText} value={field1Val}
                 onChange={handleChange}
             />
             {configData.FIELD2_NAME &&
-                <MyFormInput label={configData.FIELD2_NAME} icon={IconTypes.field2Icon} required={false} helperText={`Paste ${configData.FIELD2_NAME} here`}
-                    stateName={STATE_NAME.field2} onClick={pasteText} value={field2Val}
+                <MyFormInput label={configData.FIELD2_NAME} startIcon={<Business />} required={false} helperText={`Paste ${configData.FIELD2_NAME} here`}
+                    stateName={STATE_NAME.field2} endIconBtn={<ContentPaste />} onClick={pasteSelectedText} value={field2Val}
                     onChange={handleChange}
                 />
             }
@@ -161,7 +161,7 @@ export default function EmailForm({ configData }: { configData: ConfigDataRespTy
                 value={closingMessage}
                 required={true}
             />
-            <Button variant="contained" color="success" endIcon={<SendIcon />} onClick={handleSubmit}
+            <Button variant="contained" color="success" endIcon={<Send />} onClick={handleSubmit}
                 sx={{ padding: "2px 4px", display: "flex", alignItems: "center" }}>
                 Generate Email
             </Button>
