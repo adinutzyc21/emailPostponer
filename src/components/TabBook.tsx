@@ -3,6 +3,8 @@ import { Tabs, Tab, Typography, Box } from '@mui/material';
 import EmailForm from './EmailForm';
 import { ConfigDataRespType } from '../types';
 import NotesForm from './NotesForm';
+import { sendRequest } from '../utils/serviceCallersModule';
+import { getEmailURLInfo } from '../utils/browserInteractionModule';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -40,25 +42,50 @@ function a11yProps(index: number) {
 const tabNames = ["Generate Response", "Notes"];
 
 export default function TabBook({ configData }: { configData: ConfigDataRespType }) {
-    const [value, setValue] = React.useState(0);
+    const [tabValue, setTabValue] = React.useState(0);
 
-    const handleChange = (e: React.SyntheticEvent, newValue: number) => {
+    const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
         e.preventDefault();
-        setValue(newValue);
+        setTabValue(newValue);
     };
+
+    React.useEffect(() => {
+        getNotesList();
+    }, []);
+
+    const getNotesList = async () => {
+        try {
+            const url = await getEmailURLInfo();
+
+            const notesResponse = await sendRequest({
+                method: "retrieveNotes",
+                requestData: { url },
+            });
+
+            const notes = notesResponse.response;
+
+            if (notes && notes.length > 0) {
+                // switch to second tab
+                setTabValue(1);
+            }
+
+        } catch (e) {
+            console.error("An error occurred when retrieving email notes", e);
+        }
+    }
 
     return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="Tab Book">
+                <Tabs value={tabValue} onChange={handleTabChange} aria-label="Tab Book">
                     <Tab label={tabNames[0]} {...a11yProps(0)} />
                     <Tab label={tabNames[1]} {...a11yProps(1)} />
                 </Tabs>
             </Box>
-            <TabPanel value={value} index={0}>
+            <TabPanel value={tabValue} index={0}>
                 <EmailForm configData={configData} />
             </TabPanel>
-            <TabPanel value={value} index={1}>
+            <TabPanel value={tabValue} index={1}>
                 <NotesForm />
             </TabPanel>
         </Box>
