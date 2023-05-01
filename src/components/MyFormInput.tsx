@@ -15,7 +15,7 @@ export default function MyFormInput(props:
     return (
         <Paper
             component="form"
-            sx={{ padding: '2px 4px', display: 'flex', alignItems: 'left', margin: "20px 5px 200px" }}
+            sx={{ padding: '2px 4px', display: 'flex', alignItems: 'left', margin: "16px 0px 0px" }}
         >
             <FormControl variant="standard" required={props.required} sx={{ ml: 1, flex: 1 }} aria-label='paste text here'>
                 <InputLabel htmlFor="component-helper">{props.label}</InputLabel>

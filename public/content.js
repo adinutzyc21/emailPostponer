@@ -32,7 +32,6 @@ function messagesFromReactAppListener(msg, sender, sendResponse) {
                     confirmEmail(msg.emailToSend, sendResponse);
                 });
                 replyBtn.click();
-
             } else {
                 sendResponse(false);
             }
@@ -41,13 +40,38 @@ function messagesFromReactAppListener(msg, sender, sendResponse) {
         case "getData":
             getData(sendResponse);
             break;
+
+        case "submitNote":
+            chrome.runtime.sendMessage(
+                {
+                    message: {
+                        method: "submitNote",
+                        requestData: msg.requestData,
+                    },
+                },
+                sendResponse
+            );
+            break;
+        case "retrieveNotes":
+            chrome.runtime.sendMessage(
+                {
+                    message: {
+                        method: "retrieveNotes",
+                        requestData: msg.requestData,
+                    },
+                },
+                sendResponse
+            );
+            break;
     }
     return true;
 }
 
 function confirmEmail(message, sendResponse) {
     setTimeout(() => {
-        const sendBtn = document.querySelector("div.T-I.J-J5-Ji.aoO.v7.T-I-atl.L3");
+        const sendBtn = document.querySelector(
+            "div.T-I.J-J5-Ji.aoO.v7.T-I-atl.L3"
+        );
 
         if (sendBtn) {
             const msgBodyDiv = document.querySelector("div.Am.aO9.Al.editable");
@@ -63,8 +87,7 @@ function confirmEmail(message, sendResponse) {
         } else {
             sendResponse(false);
         }
-
-    }, 100)
+    }, 100);
 }
 
 /**
@@ -83,14 +106,14 @@ function handleErrors(response) {
 function getData(sendResponse) {
     const options = {
         headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
     };
 
     const sendResp = sendResponse;
 
-    fetch(chrome.runtime.getURL('config.json'), options)
+    fetch(chrome.runtime.getURL("config.json"), options)
         .then(handleErrors)
         .then((response) => sendResp(response))
         .catch((e) => sendResp({ Error: e.message }));
@@ -99,7 +122,8 @@ function getData(sendResponse) {
 /**
  * Create side panel
  */
-{ // Block used to avoid setting global variables
+{
+    // Block used to avoid setting global variables
     const iframe = document.createElement("iframe");
 
     iframe.style.background = "#FAF9F6";
@@ -110,11 +134,12 @@ function getData(sendResponse) {
     iframe.style.right = "10px";
     iframe.style.zIndex = "9000000000000000000";
     iframe.style.border = "1px";
-    iframe.style.boxShadow = "0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%)";
+    iframe.style.boxShadow =
+        "0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%)";
     iframe.style.display = "none";
 
     iframe.setAttribute("id", "chromeExtension");
 
-    iframe.src = chrome.runtime.getURL("index.html")
+    iframe.src = chrome.runtime.getURL("index.html");
     document.body.appendChild(iframe);
 }

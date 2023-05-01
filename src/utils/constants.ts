@@ -4,6 +4,8 @@ export const STATE_NAME = {
     contactMeAround: "contactMeAround",
     contactMeMonth: "contactMeMonth",
     closingMessage: "closingMessage",
+    newNote: "newNote",
+    url: "URL",
 };
 
 export const REACT_MSG_METHODS = {

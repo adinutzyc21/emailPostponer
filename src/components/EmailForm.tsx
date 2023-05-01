@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import { Button, Stack } from "@mui/material";
 import { PersonAdd, Business, Send, ContentPaste } from '@mui/icons-material';
 
@@ -80,22 +80,22 @@ export default function EmailForm({ configData }: { configData: ConfigDataRespTy
         });
     }
 
-    const handleChange = (event: any, stateName: string) => {
+    const handleChange = (event: SyntheticEvent, stateName: string) => {
         switch (stateName) {
             case STATE_NAME.field1:
-                setField1Val(event.target.value);
+                setField1Val((event.target as HTMLInputElement).value);
                 break;
             case STATE_NAME.field2:
-                setField2Val(event.target.value);
+                setField2Val((event.target as HTMLInputElement).value);
                 break;
             case STATE_NAME.contactMeAround:
-                setContactMeAround(event.target.value);
+                setContactMeAround((event.target as HTMLInputElement).value);
                 break;
             case STATE_NAME.contactMeMonth:
-                setContactMeMonth(event.target.value);
+                setContactMeMonth((event.target as HTMLInputElement).value);
                 break;
             case STATE_NAME.closingMessage:
-                setClosingMessage(event.target.value);
+                setClosingMessage((event.target as HTMLInputElement).value);
                 break;
         }
     }

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Tabs, Tab, Typography, Box } from '@mui/material';
 import EmailForm from './EmailForm';
 import { ConfigDataRespType } from '../types';
+import NotesForm from './NotesForm';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -58,7 +59,7 @@ export default function TabBook({ configData }: { configData: ConfigDataRespType
                 <EmailForm configData={configData} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                {tabNames[1]}
+                <NotesForm />
             </TabPanel>
         </Box>
     );

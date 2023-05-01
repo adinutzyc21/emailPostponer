@@ -8,3 +8,8 @@ export interface ConfigDataRespType {
     FIELD1_NAME: string;
     FIELD2_NAME: string;
 }
+
+export interface NotesType {
+    title: string;
+    content: string;
+}

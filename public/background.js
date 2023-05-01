@@ -13,7 +13,52 @@ chrome.runtime.onInstalled.addListener(async () => {
 /* #endregion */
 
 // Open the extension iframe when the extension button is clicked
-chrome.action.onClicked.addListener(tab => {
+chrome.action.onClicked.addListener((tab) => {
     chrome.tabs.sendMessage(tab.id, { method: "toggleExtension" });
     return true;
 });
+
+/* #region Handle messages from content scripts */
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    switch (request.message.method) {
+        case "submitNote":
+            fetchReq("PATCH", request.message.requestData, sendResponse);
+            break;
+
+        case "retrieveNotes":
+            fetchReq("POST", request.message.requestData, sendResponse);
+            break;
+    }
+    return true;
+});
+
+// Generic error handling method for all fetch calls
+function handleErrors(response) {
+    if (!response.ok) {
+        throw Error(`${response.status}: ${response.statusText}`);
+    }
+    return response.json();
+}
+
+function fetchReq(method, reqData, sendResponse) {
+    const options = {
+        method,
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Proxy-Connection": "Keep-Alive",
+        },
+        body: JSON.stringify(reqData),
+    };
+    console.log(options);
+
+    const sendResp = sendResponse;
+
+    fetch("http://127.0.0.1:5000/notes", options)
+        .then(handleErrors)
+        .then((response) => {
+            console.log(response);
+            return sendResp(response);
+        })
+        .catch((e) => sendResp({ Error: e.message }));
+}
