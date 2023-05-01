@@ -10,6 +10,7 @@ import { getEmailURLInfo, getSelectedText } from "../utils/browserInteractionMod
 import { ConfigDataRespType } from "../types";
 import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS, MONTHS, AROUND_OPTIONS } from "../utils/constants";
 import ContactMeWhenComp from "./ContactMeWhenComp";
+import { sendRequest } from "../utils/serviceCallersModule";
 
 export default function EmailForm({ configData }: { configData: ConfigDataRespType }) {
     const [field1Val, setField1Val] = useState<string>("");
@@ -20,17 +21,11 @@ export default function EmailForm({ configData }: { configData: ConfigDataRespTy
     const [contactMeAround, setContactMeAround] = useState<string>("");
     const [contactMeMonth, setContactMeMonth] = useState<string>(MONTHS[new Date().getMonth()]);
     const [closingMessage, setClosingMessage] = useState<string>("");
-    const [url, setUrl] = useState<string>("");
 
     useEffect(() => {
         setContactMeAround(AROUND_OPTIONS[0]);
         setClosingMessage(configData.CLOSING_MESSAGE[0]);
     }, [configData]);
-
-    const pasteURL = async () => {
-        const response = await getEmailURLInfo();
-        setUrl(response);
-    }
 
     const pasteSelectedText = async (stateName: string) => {
         const response = await getSelectedText();
@@ -109,10 +104,19 @@ export default function EmailForm({ configData }: { configData: ConfigDataRespTy
                 chrome.tabs.sendMessage(
                     tabs[0].id || 0,
                     { method: REACT_MSG_METHODS.replyToEmail, emailToSend: emailMessage },
-                    (resp) => {
+                    async (resp) => {
                         if (resp) {
                             setShowModal(MODAL_STATES.none);
                             resetForm();
+                            try {
+                                const url = await getEmailURLInfo();
+                                await sendRequest({
+                                    method: "submitNote",
+                                    requestData: { url, "content": `<b>Email Sent on ${(new Date()).toLocaleDateString()} at ${(new Date()).toLocaleTimeString()}:</b><br/><blockquote>${emailMessage}<blockquote>` },
+                                });
+                            } catch (e) {
+                                console.error("An error occurred when submitting email note", e);
+                            }
                         } else {
                             setShowModal(MODAL_STATES.failure);
                             setModalFailMsg("The email couldn't be generated. Please refresh and try again.");
