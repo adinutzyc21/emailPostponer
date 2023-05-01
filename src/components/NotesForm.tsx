@@ -28,33 +28,22 @@ export default function NotesForm() {
         setUrl(response);
     }
 
-
-    const handleSubmit = (event: any) => {
-        // event.preventDefault();
-
-        // if (!field1Val || !contactMeAround || !closingMessage) {
-        //     setModalFailMsg("Fields marked with * are required! You can paste them directly from the email if you want.");
-        //     setShowModal(MODAL_STATES.failure);
-        //     return;
-        // }
-        // chrome.tabs && chrome.tabs.query({
-        //     active: true,
-        //     currentWindow: true
-        // }, tabs => {
-        //     chrome.tabs.sendMessage(
-        //         tabs[0].id || 0,
-        //         { method: REACT_MSG_METHODS.checkEmailPage },
-        //         (resp) => {
-        //             if (resp) {
-        //                 setShowModal(MODAL_STATES.success);
-        //                 setEmailMessage(createEmail());
-        //             } else {
-        //                 setModalFailMsg("Can't generate email. You don't seem have the email you want to reply to open.");
-        //                 setShowModal(MODAL_STATES.failure);
-        //             }
-        //         }
-        //     );
-        // });
+    const handleSubmitNote = async (event: any) => {
+        event.preventDefault();
+        if (newNote !== "") {
+            try {
+                const newNoteResponse = await sendRequest({
+                    method: "submitNote",
+                    requestData: { url, "content": newNote },
+                });
+                if (newNoteResponse.response.content === newNote) {
+                    setNotes([newNoteResponse.response, ...notes]);
+                    setNewNote("");
+                }
+            } catch (e) {
+                console.error("An error occurred when submitting email note", e);
+            }
+        }
     }
 
     const getNotesList = async () => {
@@ -64,9 +53,9 @@ export default function NotesForm() {
                 requestData: { url },
             });
 
-            setNotes(notesResponse.response);
+            setNotes(notesResponse.response.reverse());
         } catch (e) {
-            console.error("An error occurred when retrieving person notes", e);
+            console.error("An error occurred when retrieving email notes", e);
         }
     }
 
@@ -79,7 +68,7 @@ export default function NotesForm() {
 
             <div>
                 <TextField
-                    id="outlined-textarea"
+                    id="noteTextarea"
                     label="Add a Note"
                     multiline
                     rows={2}
@@ -95,7 +84,7 @@ export default function NotesForm() {
                     }}
 
                 />
-                <Button fullWidth variant="contained" endIcon={<Add />}>Add Note</Button>
+                <Button fullWidth variant="contained" endIcon={<Add />} onClick={handleSubmitNote}>Add Note</Button>
             </div>
 
             <NotesTable rows={notes} />

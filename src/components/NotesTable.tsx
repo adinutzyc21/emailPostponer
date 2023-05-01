@@ -3,8 +3,13 @@ import { NotesType } from '../types';
 
 export default function NotesTable({ rows }: { rows: NotesType[] }) {
     return (
-        <TableContainer component={Paper} sx={{ maxHeight: 220 }}>
-            <Table aria-label="notes table">
+        <TableContainer component={Paper} sx={{ maxHeight: 230 }}>
+            <Table stickyHeader aria-label="notes table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell sx={{ fontWeight: "bold" }}>Notes List</TableCell>
+                    </TableRow>
+                </TableHead>
                 <TableBody>
                     {rows.map((row) => (
                         <TableRow

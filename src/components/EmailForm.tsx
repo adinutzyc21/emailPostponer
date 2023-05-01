@@ -167,8 +167,7 @@ export default function EmailForm({ configData }: { configData: ConfigDataRespTy
                 value={closingMessage}
                 required={true}
             />
-            <Button variant="contained" color="success" endIcon={<Send />} onClick={handleSubmit}
-                sx={{ padding: "2px 4px", display: "flex", alignItems: "center" }}>
+            <Button variant="contained" color="success" endIcon={<Send />} onClick={handleSubmit}>
                 Generate Email
             </Button>
         </Stack >
