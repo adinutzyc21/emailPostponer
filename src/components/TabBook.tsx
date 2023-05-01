@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { Tabs, Tab, Typography, Box } from '@mui/material';
 import EmailForm from './EmailForm';
-import { ConfigDataRespType } from '../types';
+import { ConfigDataRespType, NotesType } from '../types';
 import NotesForm from './NotesForm';
 import { sendRequest } from '../utils/serviceCallersModule';
-import { getEmailURLInfo } from '../utils/browserInteractionModule';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -41,8 +40,9 @@ function a11yProps(index: number) {
 
 const tabNames = ["Generate Response", "Notes"];
 
-export default function TabBook({ configData }: { configData: ConfigDataRespType }) {
+export default function TabBook({ configData, url }: { configData: ConfigDataRespType, url: string }) {
     const [tabValue, setTabValue] = React.useState(0);
+    const [notes, setNotes] = React.useState<NotesType[]>([]);
 
     const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
         e.preventDefault();
@@ -51,12 +51,11 @@ export default function TabBook({ configData }: { configData: ConfigDataRespType
 
     React.useEffect(() => {
         getNotesList();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
+    }, [url]);
 
     const getNotesList = async () => {
         try {
-            const url = await getEmailURLInfo();
-
             const notesResponse = await sendRequest({
                 method: "retrieveNotes",
                 requestData: { url },
@@ -67,7 +66,10 @@ export default function TabBook({ configData }: { configData: ConfigDataRespType
             if (notes && notes.length > 0) {
                 // switch to second tab
                 setTabValue(1);
+            } else {
+                setTabValue(0);
             }
+            setNotes(notes);
 
         } catch (e) {
             console.error("An error occurred when retrieving email notes", e);
@@ -83,10 +85,10 @@ export default function TabBook({ configData }: { configData: ConfigDataRespType
                 </Tabs>
             </Box>
             <TabPanel value={tabValue} index={0}>
-                <EmailForm configData={configData} />
+                <EmailForm configData={configData} url={url} />
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
-                <NotesForm />
+                <NotesForm url={url} notes={notes} setNotes={setNotes} />
             </TabPanel>
         </Box>
     );

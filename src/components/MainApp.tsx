@@ -47,7 +47,7 @@ export default function MainApp() {
     return (
         <Box>
             <ButtonAppBar reloadConfig={getData} />
-            <TabBook configData={configData} />
+            <TabBook configData={configData} url={url} />
         </Box>
     );
 }

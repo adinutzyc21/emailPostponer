@@ -10,19 +10,13 @@ import { sendRequest } from "../utils/serviceCallersModule"
 import NotesTable from "./NotesTable";
 import { NotesType } from "../types";
 
-export default function NotesForm() {
-    const [notes, setNotes] = useState<NotesType[]>([]);
+export default function NotesForm(props: { url: string, notes: NotesType[], setNotes: (notes: NotesType[]) => void }) {
     const [newNote, setNewNote] = useState<string>("");
-    const [url, setUrl] = useState<string>("");
+    const [url, setUrl] = useState<string>(props.url);
 
     useEffect(() => {
-        pasteURL();
-    }, []);
-
-    useEffect(() => {
-        getNotesList();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [url]);
+        setUrl(props.url);
+    }, [props.url]);
 
     const pasteURL = async () => {
         const response = await getEmailURLInfo();
@@ -38,25 +32,12 @@ export default function NotesForm() {
                     requestData: { url, "content": newNote },
                 });
                 if (newNoteResponse.response.content === newNote) {
-                    setNotes([newNoteResponse.response, ...notes]);
+                    props.setNotes([newNoteResponse.response, ...props.notes]);
                     setNewNote("");
                 }
             } catch (e) {
                 console.error("An error occurred when submitting email note", e);
             }
-        }
-    }
-
-    const getNotesList = async () => {
-        try {
-            const notesResponse = await sendRequest({
-                method: "retrieveNotes",
-                requestData: { url },
-            });
-
-            setNotes(notesResponse.response.reverse());
-        } catch (e) {
-            console.error("An error occurred when retrieving email notes", e);
         }
     }
 
@@ -88,7 +69,7 @@ export default function NotesForm() {
                 <Button fullWidth variant="contained" endIcon={<Add />} onClick={handleSubmitNote}>Add Note</Button>
             </div>
 
-            <NotesTable rows={notes} />
+            <NotesTable notes={props.notes} />
 
         </Stack >
     );

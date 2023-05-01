@@ -15,6 +15,12 @@ chrome.runtime.onInstalled.addListener(async () => {
 // Open the extension iframe when the extension button is clicked
 chrome.action.onClicked.addListener((tab) => {
     chrome.tabs.sendMessage(tab.id, { method: "toggleExtension" });
+
+    chrome.tabs.sendMessage(tab.id, {
+        message: "urlChanged",
+        url: tab.url.split("#")[1],
+    });
+
     return true;
 });
 
@@ -64,8 +70,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.url) {
         chrome.tabs.sendMessage(tabId, {
             message: "urlChanged",
-            url: changeInfo.url,
+            url: changeInfo.url.split("#")[1],
         });
+        return true;
     }
-    return true;
+    return false;
 });

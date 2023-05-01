@@ -12,7 +12,7 @@ import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS, MONTHS, AR
 import ContactMeWhenComp from "./ContactMeWhenComp";
 import { sendRequest } from "../utils/serviceCallersModule";
 
-export default function EmailForm({ configData }: { configData: ConfigDataRespType }) {
+export default function EmailForm({ configData, url }: { configData: ConfigDataRespType, url: string }) {
     const [field1Val, setField1Val] = useState<string>("");
     const [field2Val, setField2Val] = useState<string>("");
     const [showModal, setShowModal] = useState<string>(MODAL_STATES.none);
@@ -109,7 +109,6 @@ export default function EmailForm({ configData }: { configData: ConfigDataRespTy
                             setShowModal(MODAL_STATES.none);
                             resetForm();
                             try {
-                                const url = await getEmailURLInfo();
                                 await sendRequest({
                                     method: "submitNote",
                                     requestData: { url, "content": `<b>Email Sent on ${(new Date()).toLocaleDateString()} at ${(new Date()).toLocaleTimeString()}:</b><br/><blockquote>${emailMessage}<blockquote>` },
