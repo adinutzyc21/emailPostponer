@@ -1,7 +1,6 @@
-import { SelectedTextRespType } from "../types";
 import { REACT_MSG_METHODS } from "./constants";
 
-export function getSelectedText(): Promise<SelectedTextRespType> {
+export function getSelectedText(): Promise<string> {
     return new Promise((resolve) => {
         chrome.tabs &&
             chrome.tabs.query(
@@ -13,7 +12,7 @@ export function getSelectedText(): Promise<SelectedTextRespType> {
                     chrome.tabs.sendMessage(
                         tabs[0].id || 0,
                         { method: REACT_MSG_METHODS.getSelection },
-                        (response: SelectedTextRespType) => {
+                        (response: string) => {
                             resolve(response);
                         }
                     );

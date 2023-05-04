@@ -4,9 +4,8 @@ import { Button, Stack, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { sendRequest } from "../utils/serviceCallersModule"
 import NotesTable from "./NotesTable";
-import { NotesType } from "../types";
 
-export default function NotesForm(props: { url: string, notes: NotesType[], setNotes: (notes: NotesType[]) => void }) {
+export default function NotesForm(props: { url: string, notes: string[], setNotes: (notes: string[]) => void }) {
     const [newNote, setNewNote] = useState<string>("");
     const [url, setUrl] = useState<string>(props.url);
 
@@ -23,7 +22,7 @@ export default function NotesForm(props: { url: string, notes: NotesType[], setN
                     requestData: { url, "content": newNote },
                 });
                 if (newNoteResponse.response.content === newNote) {
-                    props.setNotes([newNoteResponse.response, ...props.notes]);
+                    props.setNotes([newNoteResponse.response.content, ...props.notes]);
                     setNewNote("");
                 }
             } catch (e) {

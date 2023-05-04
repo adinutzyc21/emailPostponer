@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Tabs, Tab, Typography, Box } from '@mui/material';
 import EmailForm from './EmailForm';
-import { NotesType } from '../types';
 import NotesForm from './NotesForm';
 import { sendRequest } from '../utils/serviceCallersModule';
 
@@ -42,7 +41,7 @@ const tabNames = ["Generate Response", "Notes"];
 
 export default function TabBook({ url }: {  url: string }) {
     const [tabValue, setTabValue] = React.useState(0);
-    const [notes, setNotes] = React.useState<NotesType[]>([]);
+    const [notes, setNotes] = React.useState<string[]>([]);
 
     const handleTabChange = (e: React.SyntheticEvent, newValue: number) => {
         e.preventDefault();
@@ -71,7 +70,7 @@ export default function TabBook({ url }: {  url: string }) {
             });
 
             const notes = notesResponse.response;
-            setNotes(notes);
+            setNotes(notes.map((note: {content: string}) => note.content).reverse());
 
         } catch (e) {
             console.error("An error occurred when retrieving email notes", e);

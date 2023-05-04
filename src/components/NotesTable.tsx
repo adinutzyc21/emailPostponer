@@ -1,7 +1,6 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { NotesType } from '../types';
 
-export default function NotesTable({ notes }: { notes: NotesType[] }) {
+export default function NotesTable({ notes }: { notes: string[] }) {
     if(!notes || notes.length===0){
         return null;
     }
@@ -20,7 +19,7 @@ export default function NotesTable({ notes }: { notes: NotesType[] }) {
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row">
-                                <div dangerouslySetInnerHTML={{ __html: note.content }} />
+                                <div dangerouslySetInnerHTML={{ __html: note }} />
                             </TableCell>
                         </TableRow>
                     ))}

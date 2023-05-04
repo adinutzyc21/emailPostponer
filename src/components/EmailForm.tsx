@@ -7,12 +7,11 @@ import SelectOrRbComp from "./SelectOrRbComp";
 import MyDialog from "./MyDialog";
 
 import { getSelectedText } from "../utils/browserInteractionModule";
-import { NotesType } from "../types";
 import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS, MONTHS, AROUND_OPTIONS, CLOSING_MESSAGE_OPTIONS, SENDER_NAME, COMPANY_NAME, EMAIL_TEMPLATE } from "../utils/constants";
 import ContactMeWhenComp from "./ContactMeWhenComp";
 import { sendRequest } from "../utils/serviceCallersModule";
 
-export default function EmailForm({ url, notes, setNotes }: { url: string,notes: NotesType[], setNotes: (notes: NotesType[]) => void }) {
+export default function EmailForm({ url, notes, setNotes }: { url: string, notes: string[], setNotes: (notes: string[]) => void }) {
     const [field1Val, setSenderNameVal] = useState<string>("");
     const [companyNameVal, setCompanyNameVal] = useState<string>("");
     const [showModal, setShowModal] = useState<string>(MODAL_STATES.none);
@@ -109,11 +108,12 @@ export default function EmailForm({ url, notes, setNotes }: { url: string,notes:
                             setShowModal(MODAL_STATES.none);
                             resetForm();
                             try {
-                                const newNoteResponse = await sendRequest({
+                                const content = `<b>Email Sent on ${(new Date()).toLocaleDateString()} at ${(new Date()).toLocaleTimeString()}:</b><br/><blockquote>${emailMessage}<blockquote>`;
+                                await sendRequest({
                                     method: "submitNote",
-                                    requestData: { url, "content": `<b>Email Sent on ${(new Date()).toLocaleDateString()} at ${(new Date()).toLocaleTimeString()}:</b><br/><blockquote>${emailMessage}<blockquote>` },
+                                    requestData: { url, content },
                                 });
-                                setNotes([newNoteResponse.response, ...notes]);
+                                setNotes([content, ...notes]);
 
                             } catch (e) {
                                 console.error("An error occurred when submitting email note", e);
