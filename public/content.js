@@ -2,7 +2,7 @@ function messagesFromReactAppListener(msg, sender, sendResponse) {
     switch (msg.method) {
         case "getSelection": {
             let sel = document.getSelection();
-            sendResponse({ text: sel.toString() });
+            sendResponse( sel.toString() );
             sel.removeAllRanges();
             break;
         }

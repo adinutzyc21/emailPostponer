@@ -28,13 +28,13 @@ export default function EmailForm({ url, notes, setNotes }: { url: string,notes:
     }, []);
 
     const pasteSelectedText = async (stateName: string) => {
-        const response = await getSelectedText();
+        const selTextResp = await getSelectedText();
         switch (stateName) {
             case STATE_NAME.senderName:
-                setSenderNameVal(response.text);
+                setSenderNameVal(selTextResp);
                 break;
             case STATE_NAME.companyName:
-                setCompanyNameVal(response.text);
+                setCompanyNameVal(selTextResp);
                 break;
         }
     }
