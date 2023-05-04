@@ -1,0 +1,34 @@
+{
+  "name": "Email-Postponement Extension for Gmail",
+  "description": "Chrome extension that creates and sends an email to postpone follow-up correspondence until a later date",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {},
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/mail/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["index.html"],
+      "matches": ["<all_urls>"]
+    },
+    {
+      "resources": ["config.json"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "permissions": ["activeTab", "scripting", "tabs"],
+  "host_permissions": ["https://mail.google.com/mail/*"],
+  "icons": {
+    "16": "logo16.png",
+    "32": "logo32.png",
+    "192": "logo192.png",
+    "512": "logo512.png"
+  }
+}
