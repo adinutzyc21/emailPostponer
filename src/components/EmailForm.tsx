@@ -7,14 +7,14 @@ import SelectOrRbComp from "./SelectOrRbComp";
 import MyDialog from "./MyDialog";
 
 import { getSelectedText } from "../utils/browserInteractionModule";
-import { ConfigDataRespType, NotesType } from "../types";
-import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS, MONTHS, AROUND_OPTIONS } from "../utils/constants";
+import { NotesType } from "../types";
+import { STATE_NAME, REACT_MSG_METHODS, MODAL_STATES, BUTTON_OPTIONS, MONTHS, AROUND_OPTIONS, CLOSING_MESSAGE_OPTIONS, SENDER_NAME, COMPANY_NAME, EMAIL_TEMPLATE } from "../utils/constants";
 import ContactMeWhenComp from "./ContactMeWhenComp";
 import { sendRequest } from "../utils/serviceCallersModule";
 
-export default function EmailForm({ configData, url, notes, setNotes }: { configData: ConfigDataRespType, url: string,notes: NotesType[], setNotes: (notes: NotesType[]) => void }) {
-    const [field1Val, setField1Val] = useState<string>("");
-    const [field2Val, setField2Val] = useState<string>("");
+export default function EmailForm({ url, notes, setNotes }: { url: string,notes: NotesType[], setNotes: (notes: NotesType[]) => void }) {
+    const [field1Val, setSenderNameVal] = useState<string>("");
+    const [companyNameVal, setCompanyNameVal] = useState<string>("");
     const [showModal, setShowModal] = useState<string>(MODAL_STATES.none);
     const [emailMessage, setEmailMessage] = useState<string>("");
     const [modalFailMsg, setModalFailMsg] = useState<string>("");
@@ -24,26 +24,26 @@ export default function EmailForm({ configData, url, notes, setNotes }: { config
 
     useEffect(() => {
         setContactMeAround(AROUND_OPTIONS[0]);
-        setClosingMessage(configData.CLOSING_MESSAGE[0]);
-    }, [configData]);
+        setClosingMessage(CLOSING_MESSAGE_OPTIONS[0]);
+    }, []);
 
     const pasteSelectedText = async (stateName: string) => {
         const response = await getSelectedText();
         switch (stateName) {
-            case STATE_NAME.field1:
-                setField1Val(response.text);
+            case STATE_NAME.senderName:
+                setSenderNameVal(response.text);
                 break;
-            case STATE_NAME.field2:
-                setField2Val(response.text);
+            case STATE_NAME.companyName:
+                setCompanyNameVal(response.text);
                 break;
         }
     }
 
     const createEmail = (): string => {
-        return configData.EMAIL_TEMPLATE.replace("$field1$", field1Val)
+        return EMAIL_TEMPLATE.replace("$senderName$", field1Val)
             .replace("$around$", contactMeAround)
             .replace("$month$", contactMeMonth)
-            .replace("$field2$", field2Val)
+            .replace("$companyName$", companyNameVal)
             .replace("$closing$", closingMessage);
     }
 
@@ -77,11 +77,11 @@ export default function EmailForm({ configData, url, notes, setNotes }: { config
 
     const handleChange = (event: SyntheticEvent, stateName: string) => {
         switch (stateName) {
-            case STATE_NAME.field1:
-                setField1Val((event.target as HTMLInputElement).value);
+            case STATE_NAME.senderName:
+                setSenderNameVal((event.target as HTMLInputElement).value);
                 break;
-            case STATE_NAME.field2:
-                setField2Val((event.target as HTMLInputElement).value);
+            case STATE_NAME.companyName:
+                setCompanyNameVal((event.target as HTMLInputElement).value);
                 break;
             case STATE_NAME.contactMeAround:
                 setContactMeAround((event.target as HTMLInputElement).value);
@@ -132,10 +132,10 @@ export default function EmailForm({ configData, url, notes, setNotes }: { config
     }
 
     const resetForm = () => {
-        setField1Val("");
-        setField2Val("");
+        setSenderNameVal("");
+        setCompanyNameVal("");
         setContactMeAround(AROUND_OPTIONS[0]);
-        setClosingMessage(configData.CLOSING_MESSAGE[0]);
+        setClosingMessage(CLOSING_MESSAGE_OPTIONS[0]);
         setShowModal(MODAL_STATES.none);
         setEmailMessage("");
         setModalFailMsg("");
@@ -146,16 +146,14 @@ export default function EmailForm({ configData, url, notes, setNotes }: { config
             <MyDialog showModalState={showModal} handleClose={handleDialogClose}
                 generatedEmailMessage={emailMessage} errorMsg={modalFailMsg}
             />
-            <MyFormInput label={configData.FIELD1_NAME} startIcon={<PersonAdd />} required={true} helperText={`Paste ${configData.FIELD1_NAME} here`}
-                stateName={STATE_NAME.field1} endIconBtn={<ContentPaste />} onClick={pasteSelectedText} value={field1Val}
+            <MyFormInput label={SENDER_NAME} startIcon={<PersonAdd />} required={true} helperText={`Paste ${SENDER_NAME} here`}
+                stateName={STATE_NAME.senderName} endIconBtn={<ContentPaste />} onClick={pasteSelectedText} value={field1Val}
                 onChange={handleChange}
             />
-            {configData.FIELD2_NAME &&
-                <MyFormInput label={configData.FIELD2_NAME} startIcon={<Business />} helperText={`Paste ${configData.FIELD2_NAME} here`}
-                    stateName={STATE_NAME.field2} endIconBtn={<ContentPaste />} onClick={pasteSelectedText} value={field2Val}
+                <MyFormInput label={COMPANY_NAME} startIcon={<Business />} helperText={`Paste ${COMPANY_NAME} here`}
+                    stateName={STATE_NAME.companyName} endIconBtn={<ContentPaste />} onClick={pasteSelectedText} value={companyNameVal}
                     onChange={handleChange}
                 />
-            }
             <ContactMeWhenComp label="When Should You Be Contacted"
                 optionsRb={AROUND_OPTIONS}
                 optionsSel={MONTHS}
@@ -168,7 +166,7 @@ export default function EmailForm({ configData, url, notes, setNotes }: { config
                 required={true}
             />
             <SelectOrRbComp label="Closing Message"
-                options={configData.CLOSING_MESSAGE} onChange={handleChange} stateName={STATE_NAME.closingMessage}
+                options={CLOSING_MESSAGE_OPTIONS} onChange={handleChange} stateName={STATE_NAME.closingMessage}
                 value={closingMessage}
                 required={true}
             />

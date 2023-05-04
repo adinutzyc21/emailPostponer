@@ -37,9 +37,6 @@ function messagesFromReactAppListener(msg, sender, sendResponse) {
             }
             break;
         }
-        case "getData":
-            getData(sendResponse);
-            break;
 
         case "submitNote":
             chrome.runtime.sendMessage(
@@ -101,22 +98,6 @@ function handleErrors(response) {
         throw Error(`${response.status}: ${response.statusText}`);
     }
     return response.json();
-}
-
-function getData(sendResponse) {
-    const options = {
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-        },
-    };
-
-    const sendResp = sendResponse;
-
-    fetch(chrome.runtime.getURL("config.json"), options)
-        .then(handleErrors)
-        .then((response) => sendResp(response))
-        .catch((e) => sendResp({ Error: e.message }));
 }
 
 /**

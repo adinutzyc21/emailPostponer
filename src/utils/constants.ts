@@ -1,6 +1,6 @@
 export const STATE_NAME = {
-    field1: "field1",
-    field2: "field2",
+    senderName: "senderName",
+    companyName: "companyName",
     contactMeAround: "contactMeAround",
     contactMeMonth: "contactMeMonth",
     closingMessage: "closingMessage",
@@ -12,7 +12,6 @@ export const REACT_MSG_METHODS = {
     getSelection: "getSelection",
     replyToEmail: "replyToEmail",
     checkEmailPage: "checkEmailPage",
-    getData: "getData",
 };
 
 export const MODAL_STATES = {
@@ -27,6 +26,19 @@ export const BUTTON_OPTIONS = {
 };
 
 export const AROUND_OPTIONS = ["the beginning of ", "the end of ", "mid-"];
+
+export const CLOSING_MESSAGE_OPTIONS = [
+    "have a great day",
+    "have a great evening",
+    "have a great weekend",
+    "have a great week"
+];
+
+export const SENDER_NAME = "Sender Name";
+export const COMPANY_NAME = "Company Name";
+export const EMAIL_TEMPLATE= `Hi $senderName$,<br/><br/>Thank you so much for reaching out! \
+I am not going to be available until $around$$month$, but I would be excited to talk to you about \
+$companyName$ closer to that time, if that works for you.<br/><br/>Thank you again, and $closing$!<br/>`;
 
 export const MONTHS = [
     "January",

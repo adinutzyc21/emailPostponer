@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Tabs, Tab, Typography, Box } from '@mui/material';
 import EmailForm from './EmailForm';
-import { ConfigDataRespType, NotesType } from '../types';
+import { NotesType } from '../types';
 import NotesForm from './NotesForm';
 import { sendRequest } from '../utils/serviceCallersModule';
 
@@ -40,7 +40,7 @@ function a11yProps(index: number) {
 
 const tabNames = ["Generate Response", "Notes"];
 
-export default function TabBook({ configData, url }: { configData: ConfigDataRespType, url: string }) {
+export default function TabBook({ url }: {  url: string }) {
     const [tabValue, setTabValue] = React.useState(0);
     const [notes, setNotes] = React.useState<NotesType[]>([]);
 
@@ -87,7 +87,7 @@ export default function TabBook({ configData, url }: { configData: ConfigDataRes
                 </Tabs>
             </Box>
             <TabPanel value={tabValue} index={0}>
-                <EmailForm configData={configData} url={url} notes={notes} setNotes={setNotes} />
+                <EmailForm url={url} notes={notes} setNotes={setNotes} />
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
                 <NotesForm url={url} notes={notes} setNotes={setNotes} />

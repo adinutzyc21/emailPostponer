@@ -1,10 +1,7 @@
 import { SyntheticEvent, useEffect, useState } from "react";
 import { Button, Stack, TextField } from "@mui/material";
 
-import MyFormInput from "./MyFormInput";
-
-import { STATE_NAME } from "../utils/constants";
-import { ContentPaste, Add } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import { sendRequest } from "../utils/serviceCallersModule"
 import NotesTable from "./NotesTable";
 import { NotesType } from "../types";
@@ -37,11 +34,6 @@ export default function NotesForm(props: { url: string, notes: NotesType[], setN
 
     return (
         <Stack spacing={2}>
-            <MyFormInput label={"URL"} required={true} helperText={"URL of the email"}
-                stateName={STATE_NAME.url} value={url} onChange={(event: SyntheticEvent) => setUrl((event.target as HTMLInputElement).value)}
-                disabled={true}
-            />
-
             <div>
                 <TextField
                     id="noteTextarea"
